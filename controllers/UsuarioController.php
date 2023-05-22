@@ -22,13 +22,16 @@ class UsuarioController
                 $identificacion = $_POST['identificacion'];
                 $clave = $_POST['clave'];
 
+                // Hash de la contraseña
+                $hashedPassword = hash('sha256', $clave);
+
                 // Crear una instancia del modelo UsuarioModel
                 $usuarioModel = new UsuarioModel();
 
-                // Crear el usuario
-                $resultado = $usuarioModel->crearUsuario($nombre, $correo, $identificacion, $clave);
+                // Crear el usuario con la contraseña protegida
+                $resultado = $usuarioModel->crearUsuario($nombre, $correo, $identificacion, $hashedPassword);
 
-                if ($resultado) {
+                if ($resultado === true) {
                     echo "Usuario creado exitosamente.";
                 } else {
                     echo "Error al crear el usuario.";
@@ -41,6 +44,8 @@ class UsuarioController
             include 'views/createuserform.php';
         }
     }
+
+
 
 
 // ...
@@ -90,6 +95,9 @@ class UsuarioController
 
     public function eliminar($id)
     {
+        // Obtener el ID del usuario a eliminar
+        $id = $_GET['id'];
+        
         // Elimina el usuario con el ID proporcionado utilizando el modelo
         $this->usuarioModel->eliminarUsuario($id);
 

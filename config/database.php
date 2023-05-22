@@ -1,7 +1,9 @@
 <?php
 // database.php
 
-require_once './config/config.php';
+require_once 'config.php';
+
+
 
 class Database
 {

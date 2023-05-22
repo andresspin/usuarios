@@ -1,5 +1,7 @@
 <?php
-require_once 'config/database.php';
+require_once __DIR__ . '/../config/database.php';
+
+
 
 class UsuarioModel
 {
@@ -10,15 +12,22 @@ class UsuarioModel
         $this->db = Database::getInstance();
     }
 
+    
+
+    
+
     public function crearUsuario($nombre, $correo, $identificacion, $clave)
     {
         // Genera una clave aleatoria para el usuario
-        // $clave = generarClaveAleatoria();
+        //$clave = generarClaveAleatoria();
 
+
+
+        $clavehash = hash("SHA256", $clave);
         // Inserta los datos del usuario en la tabla USUARI
         $query = "INSERT INTO USUARI (USUARI_Nombre____b, USUARI_Correo___b, USUARI_Identific_b, USUARI_Clave_____b) 
               VALUES (?, ?, ?, ?)";
-        $this->db->query($query, [$nombre, $correo, $identificacion, $clave]);
+        $this->db->query($query, [$nombre, $correo, $identificacion, $clavehash]);
 
         // Verifica si se insertó correctamente el usuario
         if ($this->db->getLastInsertId() !== null) {
@@ -27,8 +36,8 @@ class UsuarioModel
 
             // Realiza otras operaciones si es necesario
 
-            // Retorna el ID del nuevo usuario
-            return $usuarioId;
+            // Retorna el booleano del nuevo usuario
+            return true;
         }
 
         // Si no se insertó correctamente, devuelve false
@@ -47,10 +56,11 @@ class UsuarioModel
         // Realiza otras operaciones si es necesario
     }
 
+    
     public function obtenerUsuario($id)
     {
         // Obtiene los datos del usuario de la tabla USUARI utilizando su ID
-        $query = "SELECT * FROM USUARI WHERE USUARI_ConsInte__b = ?";
+        $query = "SELECT * FROM USUARI WHERE USUARI_Correo___b = ?";
         $usuario = $this->db->fetchRow($query, [$id]);
 
         // Retorna los datos del usuario
@@ -63,8 +73,9 @@ class UsuarioModel
         $query = "DELETE FROM USUARI WHERE USUARI_ConsInte__b = ?";
         $this->db->query($query, [$id]);
 
-        // Realiza otras operaciones si es necesario
+       
     }
+
     public function obtenerTodosLosUsuarios()
     {
         // Obtiene todos los usuarios de la tabla USUARI
@@ -74,13 +85,39 @@ class UsuarioModel
         // Retorna la lista de usuarios
         return $usuarios;
     }
+
+    public function autenticarUsuario($username, $password)
+    {
+        $query = "SELECT * FROM USUARI WHERE USUARI_Correo___b = ?";
+        $usuario = $this->db->fetchRow($query, [$username]);
+
+        if ($usuario) {
+           
+            }
+        }
+
+    
+    }
+
+    
+   
+
+
+
+
+
+
     // Otras funciones del modelo aquí
-}
+
 
 // Función auxiliar para generar una clave aleatoria
-function generarClaveAleatoria()
-{
-    // Implementa tu lógica para generar una clave aleatoria segura
-    // Puedes utilizar funciones como password_hash() para generar una contraseña segura
-    // Retorna la clave generada
-}
+// function generarClaveAleatoria()
+// {
+//     $length = 10;
+//     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+//     $randomString = '';
+//     for ($i = 0; $i < $length; $i++) {
+//         $randomString .= $characters[rand(0, strlen($characters) - 1)];
+//     }
+//     return $randomString;
+// }
